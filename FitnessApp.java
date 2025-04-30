@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Scanner;
 
 // FitnessClass class
+//==> Encapsulation: ห่อหุ้มข้อมูลของคลาสเอาไว้
 class FitnessClass {
     private String name;
     private String instructor;
@@ -16,6 +17,7 @@ class FitnessClass {
         this.enrolled = 0;
     }
 
+    // Encapsulation: เข้าถึงข้อมูลผ่าน method เท่านั้น
     public boolean enroll() {
         if (enrolled < capacity) {
             enrolled++;
@@ -34,6 +36,7 @@ class FitnessClass {
 }
 
 // Member class
+//==> Encapsulation + Polymorphism (รองรับการ override ในคลาสลูก)
 class Member {
     protected String name;
     protected int memberId;
@@ -44,6 +47,7 @@ class Member {
     }
 
     public void bookClass(FitnessClass fitnessClass) {
+        // Abstraction: ซ่อนรายละเอียดการ enroll class
         if (fitnessClass.enroll()) {
             System.out.println(name + " successfully booked " + fitnessClass.getName() + " class.");
         } else {
@@ -57,11 +61,13 @@ class Member {
 }
 
 // PremiumMember class
+//==> Inheritance: สืบทอดจาก Member
+//==> Polymorphism: Override เมธอด viewProfile()
 class PremiumMember extends Member {
     private boolean freePersonalTrainer;
 
     public PremiumMember(String name, int memberId, boolean freePersonalTrainer) {
-        super(name, memberId);
+        super(name, memberId);  // เรียก constructor ของคลาสแม่
         this.freePersonalTrainer = freePersonalTrainer;
     }
 
@@ -75,6 +81,7 @@ class PremiumMember extends Member {
 }
 
 // FitnessCenter class
+//==> Encapsulation: จัดการรายชื่อคลาสผ่านเมธอดเท่านั้น
 class FitnessCenter {
     private List<FitnessClass> classes = new ArrayList<>();
 
@@ -99,6 +106,7 @@ class FitnessCenter {
 }
 
 // Main Class
+//==> ใช้ Abstraction เพื่อควบคุม flow โดยไม่ให้ผู้ใช้ต้องเข้าใจโครงสร้างภายใน
 public class FitnessApp {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -114,6 +122,8 @@ public class FitnessApp {
 
         System.out.print("Are you a premium member? (yes/no): ");
         String premiumAnswer = scanner.nextLine();
+
+        // Polymorphism: ใช้ตัวแปร member แบบ Member แต่ runtime อาจเป็น PremiumMember
         Member member;
         if (premiumAnswer.equalsIgnoreCase("yes")) {
             member = new PremiumMember(name, (int)(Math.random() * 1000), true);
@@ -134,7 +144,7 @@ public class FitnessApp {
 
             switch (choice) {
                 case 1:
-                    member.viewProfile();
+                    member.viewProfile(); // Polymorphism: เรียกตามประเภทของวัตถุจริง
                     break;
                 case 2:
                     center.listClasses();
@@ -161,4 +171,3 @@ public class FitnessApp {
         scanner.close();
     }
 }
-
